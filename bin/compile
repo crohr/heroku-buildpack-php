@@ -10,7 +10,7 @@ APACHE_PATH="apache"
 PHP_VERSION="5.5.3"
 PHP_PATH="php"
 BUILDPACK_VERSION="2.0-a7"
-OPT_BUILDPACK_URL="http://vulcan-wlian.herokuapp.com/output/1b0ad49e-b0e4-46d5-b88a-541bc8fdee3f"
+OPT_BUILDPACK_URL="http://vulcan-pkgr.herokuapp.com/output/7dea7a2f-8852-48fa-98fc-9baa6571e241"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
@@ -48,6 +48,9 @@ cd bin
 ln -s ../php/bin/php php
 cd ..
 
+# required for php-fpm to initialize properly
+mkdir -p php/log
+
 export LD_LIBRARY_PATH=$BUILD_DIR/local/lib
 
 # set a slug_id identifier
@@ -60,7 +63,7 @@ curl -s https://getcomposer.org/installer | $BUILD_DIR/bin/php -- --install-dir=
 mv bin/composer.phar bin/composer
 
 if [ -f $BUILD_DIR/www/composer.json ]; then
-  COMPOSER_HOME=${BUILD_DIR}
+  export COMPOSER_HOME=${BUILD_DIR}
   echo "Installing Composer dependencies"
   cd $BUILD_DIR/www
   $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist
@@ -79,6 +82,7 @@ echo "SetEnv HW_ADDR \$HW_ADDR" >> /app/apache/conf/httpd.conf;
 for var in \`env|cut -f1 -d=\`; do
   echo "PassEnv \$var" >> /app/apache/conf/httpd.conf;
 done
+touch /app/php/log/php-fpm.log
 touch /app/apache/logs/error_log
 touch /app/apache/logs/access_log
 export PHP_ERROR_LOG=\`/app/php/bin/php -i | grep error_log | grep -v opcache | awk '{print \$5}'\`
@@ -98,7 +102,7 @@ if [ -d www/.heroku ]; then
 fi
 
 echo "Launching PHP FPM"
-/app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini
+/app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini -p /app/php
 
 echo "Launching apache"
 exec /app/apache/bin/httpd -DNO_DETACH -DSERVER_CONFIG_FILE=/app/apache/conf/httpd.conf -DHTTPD_ROOT=/app/apache -DSUEXEC_BIN=/app/apache/bin/suexec -f /app/apache/conf/httpd.conf
