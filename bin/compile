@@ -10,7 +10,7 @@ APACHE_PATH="apache"
 PHP_VERSION="5.5.3"
 PHP_PATH="php"
 BUILDPACK_VERSION="2.0-a7"
-OPT_BUILDPACK_URL="http://vulcan-pkgr.herokuapp.com/output/7dea7a2f-8852-48fa-98fc-9baa6571e241"
+OPT_BUILDPACK_URL="http://vulcan-pkgr.herokuapp.com/output/ddb00d26-e98d-4904-843a-9d54553a615e"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
