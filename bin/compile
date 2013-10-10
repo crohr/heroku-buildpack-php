@@ -101,7 +101,7 @@ echo "Launching PHP FPM"
 /app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini
 
 echo "Launching apache"
-exec /app/apache/bin/httpd -DNO_DETACH
+exec /app/apache/bin/httpd -DNO_DETACH -DSERVER_CONFIG_FILE=/app/apache/conf/httpd.conf -DHTTPD_ROOT=/app/apache -DSUEXEC_BIN=/app/apache/bin/suexec -f /app/apache/conf/httpd.conf
 EOF
 
 chmod +x boot.sh
