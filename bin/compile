@@ -60,6 +60,7 @@ curl -s https://getcomposer.org/installer | $BUILD_DIR/bin/php -- --install-dir=
 mv bin/composer.phar bin/composer
 
 if [ -f $BUILD_DIR/www/composer.json ]; then
+  COMPOSER_HOME=${BUILD_DIR}
   echo "Installing Composer dependencies"
   cd $BUILD_DIR/www
   $BUILD_DIR/bin/php $BUILD_DIR/bin/composer install --prefer-dist
