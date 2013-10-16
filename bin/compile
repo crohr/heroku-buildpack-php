@@ -10,7 +10,7 @@ APACHE_PATH="apache"
 PHP_VERSION="5.5.3"
 PHP_PATH="php"
 BUILDPACK_VERSION="2.0-a7"
-OPT_BUILDPACK_URL="http://vulcan-pkgr.herokuapp.com/output/ddb00d26-e98d-4904-843a-9d54553a615e"
+OPT_BUILDPACK_URL="http://vulcan-pkgr.herokuapp.com/output/03647919-6720-4050-a20b-ec327597339d"
 
 BIN_DIR=$(dirname $0)
 BUILD_DIR=$1
@@ -82,15 +82,15 @@ echo "SetEnv HW_ADDR \$HW_ADDR" >> /app/apache/conf/httpd.conf;
 for var in \`env|cut -f1 -d=\`; do
   echo "PassEnv \$var" >> /app/apache/conf/httpd.conf;
 done
-touch /app/php/log/php-fpm.log
+# touch /app/php/log/php-fpm.log
 touch /app/apache/logs/error_log
 touch /app/apache/logs/access_log
-export PHP_ERROR_LOG=\`/app/php/bin/php -i | grep error_log | grep -v opcache | awk '{print \$5}'\`
-touch \$PHP_ERROR_LOG
-chmod 0777 \$PHP_ERROR_LOG
-tail -F /app/apache/logs/error_log &
-tail -F /app/apache/logs/access_log &
-tail -F \$PHP_ERROR_LOG &
+#export PHP_ERROR_LOG=\`/app/php/bin/php -i | grep error_log | grep -v opcache | awk '{print \$5}'\`
+#touch \$PHP_ERROR_LOG
+#chmod 0777 \$PHP_ERROR_LOG
+#tail -F /app/apache/logs/error_log &
+#tail -F /app/apache/logs/access_log &
+#tail -F \$PHP_ERROR_LOG &
 export LD_LIBRARY_PATH=/app/local/lib
 # export PHP_INI_SCAN_DIR=/app/php
 
@@ -101,11 +101,11 @@ if [ -d www/.heroku ]; then
   done
 fi
 
-echo "Launching PHP FPM"
-/app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini -p /app/php
+# echo "Launching PHP FPM"
+# /app/php/sbin/php-fpm -y /app/php/etc/php-fpm.conf -c /app/php/php.ini -p /app/php
 
 echo "Launching apache"
-exec /app/apache/bin/httpd -DNO_DETACH -DSERVER_CONFIG_FILE=/app/apache/conf/httpd.conf -DHTTPD_ROOT=/app/apache -DSUEXEC_BIN=/app/apache/bin/suexec -f /app/apache/conf/httpd.conf
+exec /app/apache/bin/httpd -DFOREGROUND -DSERVER_CONFIG_FILE=/app/apache/conf/httpd.conf -DHTTPD_ROOT=/app/apache -DSUEXEC_BIN=/app/apache/bin/suexec -f /app/apache/conf/httpd.conf
 EOF
 
 chmod +x boot.sh

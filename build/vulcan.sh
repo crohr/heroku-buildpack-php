@@ -119,6 +119,7 @@ cd /tmp/php-5.5.3
   --with-pcre-dir=/app/local \
   --disable-cgi \
   --enable-zip \
+  --enable-igbinary \
   --with-gettext=shared
 ${MAKE}
 ${MAKE} install
